@@ -1,12 +1,19 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
+    id("maven-publish")
 }
 
 android {
     namespace = "com.kallos.components"
     compileSdk {
         version = release(37)
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 
     buildFeatures {
@@ -32,6 +39,20 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+
+                groupId = "com.github.Meetpraja"
+                artifactId = "Kallos"
+                version = "1.0.0"
+            }
+        }
     }
 }
 
